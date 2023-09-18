@@ -17,7 +17,7 @@ mixer.music.load('background.wav')
 mixer.music.play(-1)
 
 # Title and icon
-pygame.display.set_caption("Space Invaders")
+pygame.display.set_caption("Goverment Invaders")
 icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
 
@@ -39,7 +39,7 @@ for i in range(num_of_enemies):
     enemyImg.append(pygame.image.load('enemy.png'))
     enemyX.append(random.randint(0, 735))
     enemyY.append(random.randint(50, 150))
-    enemyX_change.append(1)
+    enemyX_change.append(0.6)
     enemyY_change.append(40)
 
 # Bullet
@@ -72,6 +72,13 @@ def game_over_text():
     over_text = over_font.render("GAME OVER", True, (0, 255, 0))
     screen.blit(over_text, (200, 250))
 
+def play_again_button():
+    play_again_font = pygame.font.Font('freesansbold.ttf', 32)
+    play_again_text = play_again_font.render("Play Again", True, (255, 255, 0))
+    play_again_rect = play_again_text.get_rect()
+    play_again_rect.center = (400, 375)
+    screen.blit(play_again_text, play_again_rect)
+    return play_again_rect
 
 def player(x, y):
     screen.blit(playerImg, (x, y))
@@ -95,6 +102,7 @@ def isCollision(enemyX, enemyY, bulletX, bulletY):
         return False
 
 
+game_over = False
 # Game Loop
 running = True
 while running:
@@ -126,6 +134,14 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
 
+        if event.type == pygame.MOUSEBUTTONDOWN and game_over:
+            if play_again_button().collidepoint(event.pos):
+                game_over = False
+                score_value = 0
+                for i in range(num_of_enemies):
+                    enemyX[i] = random.randint(0, 735)
+                    enemyY[i] = random.randint(50, 150)
+
     # Checking for boundaries of spaceship so it doesn't go out of bounds
     playerX += playerX_change
     if playerX <= 0:
@@ -135,11 +151,13 @@ while running:
 
     # Enemy movement
     for i in range(num_of_enemies):
-        # Game Over
+        # Game Over 
         if enemyY[i] > 440:
             for j in range(num_of_enemies):
                 enemyY[j] = 2000
             game_over_text()
+            play_again_button()
+            game_over = True
             break
 
         enemyX[i] += enemyX_change[i]
@@ -173,4 +191,5 @@ while running:
 
     player(playerX, playerY)
     show_score(textX, textY)
+
     pygame.display.update()
