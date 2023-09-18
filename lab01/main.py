@@ -17,7 +17,7 @@ mixer.music.load('background.wav')
 mixer.music.play(-1)
 
 # Title and icon
-pygame.display.set_caption("Goverment Invaders")
+pygame.display.set_caption("Government Invaders")
 icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
 
@@ -28,7 +28,7 @@ playerY = 480
 playerX_change = 0
 
 # Enemy
-enemyImg = []
+enemyImg = [pygame.image.load('enemy.png'), pygame.image.load('enemy2.png')]
 enemyX = []
 enemyY = []
 enemyX_change = []
@@ -36,7 +36,8 @@ enemyY_change = []
 num_of_enemies = 6
 
 for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('enemy.png'))
+    selected_enemy = random.choice(enemyImg)
+    enemyImg.append(selected_enemy)
     enemyX.append(random.randint(0, 735))
     enemyY.append(random.randint(50, 150))
     enemyX_change.append(0.6)
